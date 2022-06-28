@@ -14,7 +14,7 @@ class Exp(MyExp):
         self.exp_name = os.path.split(os.path.realpath(__file__))[1].split(".")[0]
 
         # Define yourself dataset path
-        self.data_dir = "coco_format_dataset"
+        self.data_dir = "/home/ec2-user/SageMaker/Ahmed_Yolox_Trials/coco_format_dataset"
         self.train_ann = "train.json"
         self.val_ann = "val.json"
 
