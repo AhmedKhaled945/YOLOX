@@ -84,3 +84,16 @@ COCO_CLASSES = (
     "hair drier",
     "toothbrush",
 )
+
+PUTNEY_CLASSES = (
+    "Pedestrian",
+    "Motorbike",
+    "Car",
+    "Bus",
+    "Cylist",
+    "Van",
+    "E Scooter",
+    "Van Ambulance",
+    "Car Police",
+    "OGV 1"
+)
