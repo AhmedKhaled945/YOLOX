@@ -125,7 +125,7 @@ def embedding_distance(tracks, detections, metric='cosine'):
     #for i, track in enumerate(tracks):
         #cost_matrix[i, :] = np.maximum(0.0, cdist(track.smooth_feat.reshape(1,-1), det_features, metric))
     track_features = np.asarray([track.smooth_feat for track in tracks], dtype=np.float)
-    cost_matrix = np.maximum(0.0, cdist(track_features, det_features, metric))  # Nomalized features
+    cost_matrix += np.maximum(0.0, cdist(track_features, det_features, metric))  # Nomalized features
     return cost_matrix
 
 
@@ -179,3 +179,14 @@ def fuse_score(cost_matrix, detections):
     fuse_sim = iou_sim * det_scores
     fuse_cost = 1 - fuse_sim
     return fuse_cost
+
+def fuse_category(cost_matrix, tracks, detections):
+    if cost_matrix.size == 0:
+        return cost_matrix
+    ls = []
+    for track in tracks:
+        ls.append([0 if detection.category == track.category else 1 for detection in detections])
+    inf_array = np.array(ls, dtype=np.float)
+    arr = cost_matrix + inf_array
+    arr = np.where(arr > 1, 1, arr)
+    return arr 
