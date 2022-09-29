@@ -119,21 +119,21 @@ def embedding_distance(tracks, detections, metric='cosine'):
     """
 
     cost_matrix = np.zeros((len(tracks), len(detections)), dtype=np.float)
-    color_matrix = np.zeros((len(tracks), len(detections)), dtype=np.float)
+    #color_matrix = np.zeros((len(tracks), len(detections)), dtype=np.float)
     if cost_matrix.size == 0:
-        return cost_matrix, color_matrix
+        return cost_matrix#, color_matrix
     det_features = np.asarray([track.curr_feat for track in detections], dtype=np.float)
     #for i, track in enumerate(tracks):
         #cost_matrix[i, :] = np.maximum(0.0, cdist(track.smooth_feat.reshape(1,-1), det_features, metric))
     track_features = np.asarray([track.smooth_feat for track in tracks], dtype=np.float)
     cost_matrix += np.maximum(0.0, cdist(track_features, det_features, metric))  # Nomalized features
     
-    color_det_features = np.asarray([track.color_features for track in detections], dtype=np.float)
+    #color_det_features = np.asarray([track.color_features for track in detections], dtype=np.float)
     #for i, track in enumerate(tracks):
         #cost_matrix[i, :] = np.maximum(0.0, cdist(track.smooth_feat.reshape(1,-1), det_features, metric))
-    color_track_features = np.asarray([track.color_features for track in tracks], dtype=np.float)
-    color_matrix += np.maximum(0.0, cdist(color_track_features, color_det_features, metric))  # Nomalized features
-    return cost_matrix, color_matrix
+    #color_track_features = np.asarray([track.color_features for track in tracks], dtype=np.float)
+    #color_matrix += np.maximum(0.0, cdist(color_track_features, color_det_features, metric))  # Nomalized features
+    return cost_matrix#, color_matrix
 
 
 def gate_cost_matrix(kf, cost_matrix, tracks, detections, only_position=False):
@@ -198,20 +198,20 @@ def fuse_category(cost_matrix, tracks, detections):
     arr = np.where(arr > 1, 1, arr)
     return arr 
 
-def weight_cost_matrix(ious_dists, emb_dists, color_dists, tracks, detections):
+def weight_cost_matrix(ious_dists, emb_dists, tracks, detections):
     if ious_dists.size == 0:
         return ious_dists
     
     ious_dists[ious_dists > 0.8] = 1
-    color_dists[color_dists>0.25] = 1
-    emb_dists[emb_dists>0.35] = 1
+    #color_dists[color_dists>0.25] = 1
+    emb_dists[emb_dists>0.15] = 1
     
     ls = []
 
     for i, track in enumerate(tracks):
         track_iou_weight = track.iou_weight
         track_vis_weight = (1-track.iou_weight)/2
-        ls_tmp = track_iou_weight*ious_dists[i] + track_vis_weight*emb_dists[i] + track_vis_weight*color_dists[i]
+        ls_tmp = track_iou_weight*ious_dists[i] + track_vis_weight*emb_dists[i]# + track_vis_weight*color_dists[i]
         ls.append(ls_tmp)
     cost_matrix = np.array(ls, dtype=np.float)
     return cost_matrix
