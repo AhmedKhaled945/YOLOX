@@ -202,9 +202,9 @@ def weight_cost_matrix(ious_dists, emb_dists, tracks, detections):
     if ious_dists.size == 0:
         return ious_dists
     
-    ious_dists[ious_dists > 0.8] = 1
+    #ious_dists[ious_dists > 0.8] = 1
     #color_dists[color_dists>0.25] = 1
-    emb_dists[emb_dists>0.15] = 1
+    #emb_dists[emb_dists>0.15] = 1
     
     ls = []
 
